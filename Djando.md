@@ -365,3 +365,35 @@ or use a short cut
 and 
 
 `question = get_object_or_404(Question, pk=question_id)`
+
+## Views
+
+1. need csrf-token verification for form submit 
+2. `request.POST['choice']` will raise [`KeyError`](https://docs.python.org/3/library/exceptions.html#KeyError) if `choice` wasn’t provided in POST data. 
+3. you should always return an [`HttpResponseRedirect`](https://docs.djangoproject.com/en/2.1/ref/request-response/#django.http.HttpResponseRedirect) after successfully dealing with POST data. This tip isn’t specific to Django; it’s just good Web development practice.
+4. We are using the [`reverse()`](https://docs.djangoproject.com/en/2.1/ref/urlresolvers/#django.urls.reverse) function in the [`HttpResponseRedirect`](https://docs.djangoproject.com/en/2.1/ref/request-response/#django.http.HttpResponseRedirect) constructor in this example. This function helps avoid having to hardcode a URL in the view function. It is given the name of the view that we want to pass control to and the variable portion of the URL pattern that points to that view.
+
+5. generic views: less code is better
+   1. why we use it : a common case of basic Web development: getting data from the database according to a parameter passed in the URL, loading a template and returning the rendered template. Because this is so common, Django provides a shortcut, called the “generic views” system.
+   2. Convert 
+      1. convert the URLconf
+      2. Delete some of the old unneeded views
+      3. introduce new views inherited from the Djando's generic view
+
+## Test
+
+create a test case in the tests.py file and 
+
+run 
+
+```bash
+$ python manage.py test polls
+```
+
+will look for tests in the polls application 
+
+## Static File System 
+
+static files consist pictures and stylesheets
+
+create a `static` directory in the `polls` directory 
