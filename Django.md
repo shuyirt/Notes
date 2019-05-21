@@ -170,23 +170,7 @@ def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 ```
 
-### Wire Database 
 
-By default, the Djando configuration uses SQLite, and you don't need to install it 
-
-If you want to use another database, you need to install appropriate [database bindings](https://docs.djangoproject.com/en/2.1/topics/install/#database-installation) and change keys DATABASES in `mysite/settings`. 
-
-Check [`DATABASES`](https://docs.djangoproject.com/en/2.1/ref/settings/#std:setting-DATABASES) for reference
-
-create the tagles in teh database before we can use them 
-
-```bash
-$ python manage.py migrate	
-```
-
-migrate command looks at the installed_apps settingn and create any necessary databese table accoding to the databse settins in you `mystic/settings.py` file and the data baseball migration shipped with the app
-
-it supports common database relationships: many to one, many to many, and one to one
 
 ### creating models 
 
@@ -207,31 +191,7 @@ class Choice(models.Model):
     votes = models.IntegerField(default=0)
 ```
 
-### activating models 
-
-1. make change
-
-2. add polls app `polls.apps.PollsConfig` into installed_apps 
-
-```bash
-$ python mange.py makemigrations polls
-```
-
-`makemigrations` tells Djanfo that you made some change to your madels 
-
-3. optional*:  prints it to the screen so that you can see what SQL Django thinks is required.
-
-```bash
-$ python manage.py sqlmigrate polls 0001
-```
-
-4. apply change to database
-
-```bash
-$ python manage.py migrate
-```
-
-### Don't repeat yourself (DRY)
+### 
 
 ### Shell 
 
@@ -281,6 +241,174 @@ q.choice_set.all()
 c = q.choice_set.filter(choice_text__startswith='Just hacking')
 c.delete()
 ```
+
+## Models
+
+provides schema and each model maps to a single database table
+
+The basics:
+
+- Each model is a Python class that subclasses [`django.db.models.Model`](https://docs.djangoproject.com/en/2.1/ref/models/instances/#django.db.models.Model).
+- Each attribute of the model represents a database field.
+- With all of this, Django gives you an automatically-generated database-access API; see [Making queries](https://docs.djangoproject.com/en/2.1/topics/db/queries/).
+
+### Quick Example
+
+```python
+from django.db import models
+
+class Person(models.Model):
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+```
+
+- it will have id as primary key 
+- first name and last name as columns in table
+
+you need to add your app into the `INSTALLED_APPS` in the `settings.py`
+
+### Field
+
+#### Field Type 
+
+#### Field Option
+
+| Field Options      | Description                                                  | Option            | Default                                                      |
+| ------------------ | ------------------------------------------------------------ | ----------------- | ------------------------------------------------------------ |
+| null               | Django will store empty values as `NULL` in the database.    | Boolean           | False                                                        |
+| blank              | the field is allowed to be blank during validation           | Boolean           | False                                                        |
+| choices            | If this is given, the default form widget will be a select box instead of the standard text field and will limit choices to the choices given.<br />the display value for a field with `choices` can be accessed using the [`get_FOO_display()`](https://docs.djangoproject.com/en/2.1/ref/models/instances/#django.db.models.Model.get_FOO_display)method. | a list or a tuple |                                                              |
+| default            | the default value for the field. This can be a value or a callable object. If callable it will be called every time a new object is created. | Str               |                                                              |
+| Help_text          | Extra “help” text to be displayed with the form widget. It’s useful for documentation even if your field isn’t used on a form. | Str               |                                                              |
+| Primary_key        | if `True`, this field is the primary key for the model.<br />if not specify `primary_key=True`, Django will automatically add an [`IntegerField`](https://docs.djangoproject.com/en/2.1/ref/models/fields/#django.db.models.IntegerField)to hold the primary key | Boolean           | [Automatic primary key fields](https://docs.djangoproject.com/en/2.1/topics/db/models/#automatic-primary-key-fields) |
+| unique             | If `True`, this field must be unique throughout the ta       | Boolean           |                                                              |
+| verbose field name | Each field type, except for [`ForeignKey`](https://docs.djangoproject.com/en/2.1/ref/models/fields/#django.db.models.ForeignKey), [`ManyToManyField`](https://docs.djangoproject.com/en/2.1/ref/models/fields/#django.db.models.ManyToManyField) and [`OneToOneField`](https://docs.djangoproject.com/en/2.1/ref/models/fields/#django.db.models.OneToOneField), takes an optional first positional argument – a verbose name.<br />[`ForeignKey`](https://docs.djangoproject.com/en/2.1/ref/models/fields/#django.db.models.ForeignKey), [`ManyToManyField`](https://docs.djangoproject.com/en/2.1/ref/models/fields/#django.db.models.ManyToManyField) and [`OneToOneField`](https://docs.djangoproject.com/en/2.1/ref/models/fields/#django.db.models.OneToOneField) require the first argument to be a model class, so use the [`verbose_name`](https://docs.djangoproject.com/en/2.1/ref/models/fields/#django.db.models.Field.verbose_name) keyword argument: | Str               | automatically create it using the field’s attribute name, converting underscores to spaces. |
+
+```
+# example for choices
+from django.db import models
+
+class Person(models.Model):
+    SHIRT_SIZES = (
+        ('S', 'Small'),
+        ('M', 'Medium'),
+        ('L', 'Large'),
+    )
+    name = models.CharField(max_length=60)
+    shirt_size = models.CharField(max_length=1, choices=SHIRT_SIZES)
+```
+
+### Relationship 
+
+#### Many to one relationship
+
+To define a many-to-one relationship, use [`django.db.models.ForeignKey`](https://docs.djangoproject.com/en/2.1/ref/models/fields/#django.db.models.ForeignKey).
+
+```python
+from django.db import models
+
+class Manufacturer(models.Model):
+    # ...
+    pass
+
+class Car(models.Model):
+    manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE)
+    # ...
+```
+
+the name of a [`ForeignKey`](https://docs.djangoproject.com/en/2.1/ref/models/fields/#django.db.models.ForeignKey) field (`manufacturer` in the example above) be the name of the model, lowercase.
+
+#### many to many relationship 
+
+To define a many-to-many relationship, use [`ManyToManyField`](https://docs.djangoproject.com/en/2.1/ref/models/fields/#django.db.models.ManyToManyField). 
+
+```python
+from django.db import models
+
+class Topping(models.Model):
+    # ...
+    pass
+
+class Pizza(models.Model):
+    # ...
+    toppings = models.ManyToManyField(Topping)
+```
+
+It’s suggested, but not required, that the name of a [`ManyToManyField`](https://docs.djangoproject.com/en/2.1/ref/models/fields/#django.db.models.ManyToManyField) (`toppings` in the example above) be a plural describing the set of related model objects.
+
+ There is a many-to-many relationship between a person and the groups of which they are a member, so you could use a[`ManyToManyField`](https://docs.djangoproject.com/en/2.1/ref/models/fields/#django.db.models.ManyToManyField) to represent this relationship. However, there is a lot of detail about the membership that you might want to collect, such as the date at which the person joined the group.
+
+For these situations, Django allows you to specify the model that will be used to govern the many-to-many relationship. You can then put extra fields on the intermediate model. The intermediate model is associated with the[`ManyToManyField`](https://docs.djangoproject.com/en/2.1/ref/models/fields/#django.db.models.ManyToManyField) using the [`through`](https://docs.djangoproject.com/en/2.1/ref/models/fields/#django.db.models.ManyToManyField.through) argument to point to the model that will act as an intermediary. For our musician example, the code would look something like this:
+
+```python
+from django.db import models
+
+class Person(models.Model):
+    name = models.CharField(max_length=128)
+
+    def __str__(self):
+        return self.name
+
+class Group(models.Model):
+    name = models.CharField(max_length=128)
+    members = models.ManyToManyField(Person, through='Membership')
+
+    def __str__(self):
+        return self.name
+
+class Membership(models.Model):
+    person = models.ForeignKey(Person, on_delete=models.CASCADE)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    date_joined = models.DateField()
+    invite_reason = models.CharField(max_length=64)
+```
+
+
+
+## Database
+
+### Wire Database 
+
+By default, the Djando configuration uses SQLite, and you don't need to install it 
+
+If you want to use another database, you need to install appropriate [database bindings](https://docs.djangoproject.com/en/2.1/topics/install/#database-installation) and change keys DATABASES in `mysite/settings`. 
+
+Check [`DATABASES`](https://docs.djangoproject.com/en/2.1/ref/settings/#std:setting-DATABASES) for reference
+
+create the tagles in teh database before we can use them 
+
+```bash
+$ python manage.py migrate	
+```
+
+migrate command looks at the installed_apps settingn and create any necessary databese table accoding to the databse settins in you `mystic/settings.py` file and the data baseball migration shipped with the app
+
+it supports common database relationships: many to one, many to many, and one to one
+
+### Migration
+
+1. make change
+2. add polls app `polls.apps.PollsConfig` into installed_apps 
+
+```bash
+$ python mange.py makemigrations polls
+```
+
+`makemigrations` tells Djanfo that you made some change to your madels 
+
+3. optional*:  prints it to the screen so that you can see what SQL Django thinks is required.
+
+```bash
+$ python manage.py sqlmigrate polls 0001
+```
+
+4. apply change to database
+
+```bash
+$ python manage.py migrate
+```
+
+### Don't repeat yourself (DRY)
 
 ## Admin & User
 
