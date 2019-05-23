@@ -119,3 +119,11 @@ you can have an else clauses for while and for loop
 
 it is executed when the loop terminates through exhaustion of the list (with [`for`](https://docs.python.org/3/reference/compound_stmts.html#for)) or when the condition becomes false (with [`while`](https://docs.python.org/3/reference/compound_stmts.html#while)), but not when the loop is terminated by a [`break`](https://docs.python.org/3/reference/simple_stmts.html#break) statement.
 
+## 4. If condition 
+
+|         |                        |
+| ------- | ---------------------- |
+| None    | If x is None           |
+| Ternary | x = 0 if y == z else 8 |
+|         |                        |
+
