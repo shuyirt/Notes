@@ -20,3 +20,9 @@
 
 ## Acronym
 
+## Habbit
+
+define variable and then do add, not directly add 
+
+https://stackoverflow.com/questions/44957261/translating-formatted-strings-in-django-not-working
+

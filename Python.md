@@ -127,3 +127,6 @@ it is executed when the loop terminates through exhaustion of the list (with [`f
 | Ternary | x = 0 if y == z else 8 |
 |         |                        |
 
+## I18n
+
+`gettext` module 
