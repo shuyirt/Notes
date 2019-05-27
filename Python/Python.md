@@ -127,3 +127,16 @@ it is executed when the loop terminates through exhaustion of the list (with [`f
 | Ternary | x = 0 if y == z else 8 |
 |         |                        |
 
+5. string methods
+
+## string
+
+| name    | function                          | usage                            |
+| ------- | --------------------------------- | -------------------------------- |
+| split   | split string into two             | local, domain = email.split('@') |
+| replace | replace a substr with another one | local.replace('.','')            |
+| index   | get the index of substr in a str  | email.index('@')                 |
+| join    | join strs                         | '.'.join(list)                   |
+| lower   | get the lower case                |                                  |
+| ord     | get the ascii value from letter   |                                  |
+| chr     | get letter from ascii value       |                                  |
