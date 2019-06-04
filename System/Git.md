@@ -42,3 +42,15 @@
 
 [Website for auto generating  .gitignore file]: https://www.gitignore.io
 
+Rename Branch
+
+```
+git branch -m old_branch new_branch         # Rename branch in other branch  
+or 
+git branch -m new-name											# in the branch
+
+git push origin :old_branch                 # Delete the old branch    
+
+git push --set-upstream origin new_branch 
+```
+
