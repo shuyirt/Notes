@@ -140,3 +140,8 @@ it is executed when the loop terminates through exhaustion of the list (with [`f
 | lower   | get the lower case                |                                  |
 | ord     | get the ascii value from letter   |                                  |
 | chr     | get letter from ascii value       |                                  |
+
+define variable and then do add, not directly add 
+
+https://stackoverflow.com/questions/44957261/translating-formatted-strings-in-django-not-working
+

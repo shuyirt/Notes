@@ -525,3 +525,9 @@ will look for tests in the polls application
 static files consist pictures and stylesheets
 
 create a `static` directory in the `polls` directory 
+
+## Glossary
+
+Slug: short label for something, containing only letters, numbers, underscores or hyphens 
+
+it used in typical blog entry URL
