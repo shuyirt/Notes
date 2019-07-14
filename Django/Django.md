@@ -9,7 +9,7 @@
 Either download Xcode and then get the Command Line Tools by running. 
 
 ```bash
-$ python manage.py migrate		
+	
 ```
 
 or get a OSX-GCC-Installer package
