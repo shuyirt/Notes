@@ -12,7 +12,7 @@
 
     https://docs.aws.amazon.com/cli/latest/userguide/cli-install-macos.html
 
-2. if you run aws —version, it shows `command not found`, try to see if your aws is installed under `~/Library/Python/3.7/bin/`. If it is, you can run 
+2. if you run `aws —version`, it shows `command not found`, try to see if your aws is installed under `~/Library/Python/3.7/bin/`. If it is, you can run 
 
 ```BASH
 cd ~
